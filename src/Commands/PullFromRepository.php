@@ -24,7 +24,7 @@ class PullFromRepository extends Command
             return; 
         }
 
-        $result = Process::run("git pull origin master", function (string $type, string $output) {
+        $result = Process::run("git pull", function (string $type, string $output) {
               
             $this->info( $output );
 
