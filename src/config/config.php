@@ -3,6 +3,8 @@
 /*
  * Set specific configuration variables here
  */
-return [
-    'npm_build' => true
+return [   
+    'ssh_username' => '',
+    'ssh_ip' => '',
+    'ssh_port' => ''
 ];
