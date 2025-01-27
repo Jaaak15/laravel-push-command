@@ -19,8 +19,8 @@ class DeployServiceProvider extends ServiceProvider
      */
     protected function registerConfigurations()
     {
-        $this->mergeConfigFrom( $this->packagePath('config/config.php'), 'laravolt.avatar' );
-        $this->publishes( [$this->packagePath('config/config.php') => config_path('gh/deploy.php')], 'config' );
+        $this->mergeConfigFrom( $this->packagePath('config/config.php'), 'jakgh.deploy_command' );
+        $this->publishes( [$this->packagePath('config/config.php') => config_path('jakgh/deploy_command.php')], 'config' );
     }
 
     /**
