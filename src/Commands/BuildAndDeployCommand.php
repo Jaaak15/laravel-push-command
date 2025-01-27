@@ -5,6 +5,8 @@ namespace JakGH\LaravelGHDeploy\Commands;
 use Illuminate\Console\Command;
 use function Laravel\Prompts\text;
 use function Laravel\Prompts\confirm;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Process;
 
 class BuildAndDeployCommand extends Command
 {  
@@ -14,30 +16,32 @@ class BuildAndDeployCommand extends Command
     const CONFIGKEY         = 'jakgh.deploy_command.';
 
     public function handle()
-    {        
+    {                     
         $this->npm();
-        $this->git();  
-        $this->pipeline();
+        $this->git();   
+        $this->pipeline();        
     }
 
     private function pipeline()
     {
-        $username   = config( self::CONFIGKEY. 'ssh_username' );
-        $port       = config( self::CONFIGKEY. 'ssh_port' );
-        $ip         = config( self::CONFIGKEY. 'ssh_ip' );
-        $file_path  = config( self::CONFIGKEY. 'ssh_file_path' );
+        
+        $url  = config( self::CONFIGKEY. 'production_url' );       
 
-        if( empty( $username ) || empty( $port ) || empty( $ip ) || empty( $file_path ) )
+        if( empty( $url ) )
         {
             $this->warn( 'Nessuna configurazione per invocare lo script sul server di produzione' );
 
             return;
         }
 
+        $target_url = config( self::CONFIGKEY. 'url' )."/gh/pull-command/" . config( self::CONFIGKEY. 'secret_code' );
+      
         if ( confirm('Vuoi eseguire il pull dal server?') ) {
 
-            $output = shell_exec("ssh ". $username ."@". $ip ." -p ".$port ." 'sh " .$file_path."'" );
-            $this->info( print_r( $output, true ) );
+            $response = Http::withoutVerifying()->get( $target_url );
+
+            $this->info( $response->body() );
+        
 
         }else {
 
@@ -53,14 +57,22 @@ class BuildAndDeployCommand extends Command
     {
         if ( confirm('Vuoi eseguire NPM RUN BUILD?') ) {
 
-            $output = shell_exec('npm run build');         
-            $this->info( print_r( $output, true ) );
+            $result = Process::run('npm run build', function (string $type, string $output) {
+              
+                $this->info( $output );
+
+            });     
+            
+            if ($result->successful()) {
+                
+                $this->line('<bg=green;fg=white> Build dei file js completata </>');
+            }
 
             return;
 
         }
 
-        $this->info('NPM RUN BUILD saltato');
+        $this->warn('NPM RUN BUILD saltato');
          
     }
     /*
@@ -70,8 +82,11 @@ class BuildAndDeployCommand extends Command
     {
         if ( confirm('Vuoi eseguire il push della repo?') ) {
 
-            $output = shell_exec('git add .');        
-            $this->info( print_r( $output, true ) );
+            Process::run('git add .', function (string $type, string $output) {
+              
+                $this->info( $output );
+
+            });            
 
             $commit = text(
                 label: 'Messaggio del commit?',
@@ -80,11 +95,16 @@ class BuildAndDeployCommand extends Command
                 hint: 'Il messaggio mostrato come descrizione del commit'
             );
 
-            $output = shell_exec("git commit -m '". $commit ."'");
-            $this->info( print_r( $output, true ) ); 
+            $result = Process::run("git commit -m '". $commit ."' && git push", function (string $type, string $output) {
+              
+                $this->info( $output );
 
-            $output = shell_exec('git push');        
-            $this->info( print_r( $output, true ) );
+            }); 
+
+            if ($result->successful()) {
+                
+                $this->line('<bg=green;fg=white> Push completato </>');
+            }
 
             return;
 

@@ -3,10 +3,14 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 
-Route::get( '/gh/pull-command/{code}', function () {
-    
-    \Artisan::call('cache:clear');
+Route::middleware('api')->get( '/gh/pull-command/{code}', function ( $code ) {    
+   
+    Artisan::call('gh:pull', [
+        'code' => $code
+    ]);
 
-    dd("Cache is cleared");
+    return response()->json([
+        Artisan::output()
+    ]);;
 
-});
+})->name('gh.server.pull');
