@@ -3,6 +3,7 @@
 namespace JakGH\LaravelGHDeploy\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use JakGH\LaravelGHDeploy\Commands\BuildAndDeployCommand;
 
 
 class DeployServiceProvider extends ServiceProvider
@@ -10,6 +11,10 @@ class DeployServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerConfigurations();
+
+        $this->commands([
+            BuildAndDeployCommand::class,
+        ]);
     }
 
     /**
