@@ -6,5 +6,6 @@
 return [   
     'ssh_username' => '',
     'ssh_ip' => '',
-    'ssh_port' => ''
+    'ssh_port' => '',
+    'ssh_file_path' => ''
 ];

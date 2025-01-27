@@ -14,16 +14,36 @@ class BuildAndDeployCommand extends Command
     const CONFIGKEY         = 'jakgh.deploy_command.';
 
     public function handle()
-    {
-       
+    {        
         $this->npm();
         $this->git();  
         $this->pipeline();
-
     }
 
     private function pipeline()
     {
+        $username   = config( self::CONFIGKEY. 'ssh_username' );
+        $port       = config( self::CONFIGKEY. 'ssh_port' );
+        $ip         = config( self::CONFIGKEY. 'ssh_ip' );
+        $file_path  = config( self::CONFIGKEY. 'ssh_file_path' );
+
+        if( empty( $username ) || empty( $port ) || empty( $ip ) || empty( $file_path ) )
+        {
+            $this->warn( 'Nessuna configurazione per invocare lo script sul server di produzione' );
+
+            return;
+        }
+
+        if ( confirm('Vuoi eseguire il pull dal server?') ) {
+
+            $output = shell_exec("ssh ". $username ."@". $ip ." -p ".$port ."'sh " .$file_path."'" );
+            $this->info( print_r( $output, true ) );
+
+        }else {
+
+            $this->info('Completato');
+        }
+
 
     }
     /*
