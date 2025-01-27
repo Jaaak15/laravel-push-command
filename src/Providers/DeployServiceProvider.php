@@ -20,7 +20,11 @@ class DeployServiceProvider extends ServiceProvider
     protected function registerConfigurations()
     {
         $this->mergeConfigFrom( $this->packagePath('config/config.php'), 'jakgh.deploy_command' );
-        $this->publishes( [$this->packagePath('config/config.php') => config_path('jakgh/deploy_command.php')], 'config' );
+            $this->publishes( [ 
+                $this->packagePath('config/config.php') => config_path('jakgh/deploy_command.php')
+            ], 
+            ['jakghdeploy'] 
+        );
     }
 
     /**
