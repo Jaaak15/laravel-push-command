@@ -1,0 +1,29 @@
+{
+    "name": "jakgh/laravel-push-command",
+    "description": "Push deploy command for Laravel",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "JakGH\\LaravelGHDeploy\\": "src/"
+        }
+    },
+    
+    "authors": [
+        {
+            "name": "Jak",
+            "email": "giacomojakzoffoli@gmail.com"
+        }
+    ],    
+    "require": {
+        "php": "^8.1"       
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "JakGH\\LaravelGHDeploy\\Providers\\DeployServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
