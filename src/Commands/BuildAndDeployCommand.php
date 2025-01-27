@@ -36,7 +36,7 @@ class BuildAndDeployCommand extends Command
 
         if ( confirm('Vuoi eseguire il pull dal server?') ) {
 
-            $output = shell_exec("ssh ". $username ."@". $ip ." -p ".$port ."'sh " .$file_path."'" );
+            $output = shell_exec("ssh ". $username ."@". $ip ." -p ".$port ." 'sh " .$file_path."'" );
             $this->info( print_r( $output, true ) );
 
         }else {
