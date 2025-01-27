@@ -4,7 +4,8 @@ namespace JakGH\LaravelGHDeploy\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use JakGH\LaravelGHDeploy\Commands\BuildAndDeployCommand;
-
+use Illuminate\Support\Facades\Route;
+use JakGH\LaravelGHDeploy\Commands\PullFromRepository;
 
 class DeployServiceProvider extends ServiceProvider
 {
@@ -12,8 +13,11 @@ class DeployServiceProvider extends ServiceProvider
     {
         $this->registerConfigurations();
 
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
+
         $this->commands([
             BuildAndDeployCommand::class,
+            PullFromRepository::class
         ]);
     }
 
@@ -30,8 +34,7 @@ class DeployServiceProvider extends ServiceProvider
             ], 
             ['jakghdeploy'] 
         );
-    }
-
+    } 
     /**
      * Loads a path relative to the package base directory.
      *
