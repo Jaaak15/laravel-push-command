@@ -34,7 +34,7 @@ class BuildAndDeployCommand extends Command
             return;
         }
 
-        $target_url = config( self::CONFIGKEY. 'url' )."/gh/pull-command/" . config( self::CONFIGKEY. 'secret_code' );
+        $target_url = config( self::CONFIGKEY. 'production_url' )."/gh/pull-command/" . config( self::CONFIGKEY. 'secret_code' );
       
         if ( confirm('Vuoi eseguire il pull dal server?') ) {
 
