@@ -5,5 +5,6 @@
  */
 return [   
     'production_url' => '',
-    'secret_code' => 'secret-code-xxx'
+    'secret_code' => 'secret-code-xxx',
+    'git_pull_add' => ''
 ];
